@@ -44,7 +44,7 @@ public class BombScript : MonoBehaviour {
         {
             if(Vector3.Distance(gameObject.transform.position, players[i].transform.position) <= explosionRange/2)
             {
-                players[i].rigidbody.AddExplosionForce(500, gameObject.transform.position, explosionRange);
+                players[i].rigidbody.AddExplosionForce(1500, gameObject.transform.position, explosionRange);
             }
         }
     }

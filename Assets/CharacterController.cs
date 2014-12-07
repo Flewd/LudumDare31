@@ -4,6 +4,11 @@ using System.Collections;
 public class CharacterController : MonoBehaviour {
 
     public int player;
+    public GameObject weapon;
+
+    float punchReset = 0.25f;
+    float punchCooldown = 0;
+
 
 	// Use this for initialization
 	void Start () {
@@ -12,6 +17,8 @@ public class CharacterController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+        punchCooldown -= Time.deltaTime;
 
         if(player == 1)
         {
@@ -30,6 +37,26 @@ public class CharacterController : MonoBehaviour {
             if (Input.GetKey(KeyCode.D))
             {
                 rigidbody.AddForce(20, 0, 0);
+            }
+
+            if (punchCooldown <= 0)
+            {
+                if (Input.GetKey(KeyCode.I))
+                {
+                    spawnProjectile(new Vector3(0, 0, 1));
+                }
+                else if (Input.GetKey(KeyCode.K))
+                {
+                    spawnProjectile(new Vector3(0, 0, -1));
+                }
+                else if (Input.GetKey(KeyCode.J))
+                {
+                    spawnProjectile(new Vector3(-1, 0, 0));
+                }
+                else if (Input.GetKey(KeyCode.L))
+                {
+                    spawnProjectile(new Vector3(1, 0, 0));
+                }
             }
         }
 
@@ -54,4 +81,19 @@ public class CharacterController : MonoBehaviour {
         }
 	
 	}
+
+    void spawnProjectile(Vector3 direction)
+    {
+        GameObject projectile = Instantiate(Resources.Load("weapon", typeof(GameObject))) as GameObject;
+        projectile.transform.position = gameObject.transform.position + direction;
+        projectile.rigidbody.AddForce(1500 * direction.x, 0, 1500 * direction.z);
+        punchCooldown = punchReset;
+
+        if (direction.z == 0)
+        {
+            projectile.transform.Rotate(0, 90, 0);
+        }
+
+        GameObject.Destroy(projectile, 0.35f);
+    }
 }
